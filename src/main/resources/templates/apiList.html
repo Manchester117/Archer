@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Archer</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <input type="hidden" id="service_id" name="serviceId" th:value="${serviceId}"/>
+                    <h3 class="panel-title"><i class="fa fa-table"></i> 接口配置 </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="search" class="form-inline">
+                        <div class="form-group" id="project_search">
+                            <label for="project_select">所属项目: </label>
+                            <select class="selectpicker project_select" id="project_select">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="service_search">
+                            <label for="service_select">所属服务: </label>
+                            <select class="selectpicker service_select" id="service_select" disabled>
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="search_name">接口名称: </label>
+                            <input id="search_name" class="form-control input-sm" name="apiName" value=""/>
+                        </div>
+                        <button id="search_btn" type="button" class="btn btn-primary btn-sm">查找</button>
+                        <button id="reset_btn" type="button" class="btn btn-primary btn-sm">重置</button>
+                        <a href="javascript:forwardAddApiPage()" id="create_api_btn" type="button" class="btn btn-primary btn-sm">新建</a>
+                    </div>
+                    <div id="list">
+                        <table id="api_list" class="table table-bordered" style="table-layout:fixed"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Archer</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-dashboard"></i> 未归档接口 </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="search" class="form-inline">
+                        <div class="form-group">
+                            <label for="search_name">接口名称: </label>
+                            <input id="search_name" class="form-control input-sm" name="apiName" value=""/>
+                        </div>
+                        <button id="search_btn" type="button" class="btn btn-primary btn-sm">查找</button>
+                        <button id="reset_btn" type="button" class="btn btn-primary btn-sm">重置</button>
+                    </div>
+                    <div id="list">
+                        <table id="non_chain_api_list" class="table table-bordered"></table>
+                    </div>
+                    <div class="modal fade" id="create_chain_modal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document" style="width:640px">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="createModalLabel">设置所属服务</h4>
+                                    <input type="hidden" id="api_id" name="apiId" value=""/>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-inline">
+                                        <div class="form-group" id="project_search_non_chain">
+                                            <label for="project_select_non_chain">所属项目: </label>
+                                            <select class="selectpicker" id="project_select_non_chain">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="service_search_non_chain">
+                                            <label for="service_select_non_chain">所属服务: </label>
+                                            <select class="selectpicker" id="service_select_non_chain" disabled>
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="button" class="btn btn-primary" id="create_chain_submit">提交</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{custom/nonChainList.js}"></script>
+</div>
+</body>
+</html>

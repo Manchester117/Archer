@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Archer</title>
+
+    <!-- Bootstrap core CSS -->
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap-select.css}">
+
+    <!-- Add custom CSS here -->
+    <link type="text/css" rel="stylesheet" th:href="@{css/sb-admin.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{font-awesome/css/font-awesome.min.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{css/multiselect-style.css}">
+
+    <!-- JavaScript -->
+    <script type="text/javascript" th:src="@{js/jquery-1.12.4.js}"></script>
+    <script type="text/javascript" th:src="@{js/jquery.form.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-table.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-table-zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-select.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootstrap-select-zh-CN.js}"></script>
+    <script type="text/javascript" th:src="@{js/bootbox.min.js}"></script>
+    <script type="text/javascript" th:src="@{js/multiselect.js}"></script>
+
+    <style type="text/css">
+        #search {
+            margin: 0 0 10px 0;
+            border: 0;
+            padding: 0;
+        }
+        #list {
+            margin: 10px 0 0 0;
+            border: 0;
+            padding: 0;
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle!important;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Archer</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav side-nav">
+                <li><a href="/"><i class="fa fa-dashboard"></i>&nbsp;项目列表</a></li>
+                <li><a href="/apiList"><i class="fa fa-table"></i>&nbsp;接口列表</a></li>
+                <li><a href="/caseConfig"><i class="fa fa-check-square-o"></i>&nbsp;用例配置</a></li>
+                <li><a href="/hostsList"><i class="fa fa-television"></i>&nbsp;Host列表</a></li>
+                <li><a href="/nonChainApiList"><i class="fa fa-chain-broken"></i>&nbsp;未归档接口</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div id="page-wrapper">
+        <div layout:fragment="content"></div>
+    </div>
+</div>
+<!-- /#wrapper -->
+<script type="text/javascript" th:inline="javascript" th:src="@{custom/layout.js}"></script>
+<script type="text/javascript" th:inline="javascript" th:src="@{custom/apiList.js}"></script>
+<script type="text/javascript" th:inline="javascript" th:src="@{custom/apiAddPage.js}"></script>
+<script type="text/javascript" th:inline="javascript" th:src="@{custom/apiModPage.js}"></script>
+</body>
+</html>
