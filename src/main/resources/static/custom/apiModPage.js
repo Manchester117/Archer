@@ -1,3 +1,24 @@
+// 获取当前项目下的所有服务
+var $service_select_mod_api = $("#service_select_mod_api");
+var projectId = $("#project_id").val();
+if (projectId !== undefined) {
+    $.ajax({
+        type: "post",
+        url: "/getServiceListByProjectId",
+        data: "projectId=" + projectId,
+        dataType: "json",
+        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+        success: function (result) {
+            for (var i = 0; i < result.length; i++) {
+                $service_select_mod_api.append("<option value=" + result[i].id + ">" + result[i].serviceName + "</option>")
+            }
+            $service_select_mod_api.selectpicker('val', $('#service_id').val());
+            $service_select_mod_api.selectpicker("refresh");
+            $service_select_mod_api.selectpicker("render");
+        }
+    });
+}
+
 /**
  * @description 将页面中的HTTP请求头各属性整合为JSON
  * @returns {{id: *|jQuery, apiName: *|jQuery, protocol: *|jQuery, method: *|jQuery, url: *|jQuery, isMock: number, serviceId: *|jQuery, header: {}, body: {}, verifyInfoList: Array}}
@@ -16,6 +37,16 @@ function getApiInfoJsonModifyData() {
         if (headerName === 'Content-Type')
             contentType = headerValue;
         headerItemJson[headerName] = headerValue;
+    }
+
+    var $custom_header_list = $("#custom_header_list");
+    var customHeaderItemLength = $custom_header_list.find("tr").length;
+    var customHeaderNameList = $custom_header_list.find(".header-name-input");
+    var customHeaderValueList = $custom_header_list.find(".header-value-input");
+    for (var customHeaderIndex = 0; customHeaderIndex < customHeaderItemLength; ++customHeaderIndex) {
+        var customHeaderName = customHeaderNameList[customHeaderIndex].value;
+        var customHeaderValue = customHeaderValueList[customHeaderIndex].value;
+        headerItemJson[customHeaderName] = customHeaderValue;
     }
 
     var bodyJson = {};

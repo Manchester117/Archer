@@ -269,7 +269,7 @@
                             <div class="panel-body" id="header_info">
                                 <div id="header_toolbar" class="btn-group" style="padding-bottom: 10px">
                                     <button id="add_header_item" class="btn btn-primary" title="添加">
-                                        <i class="glyphicon glyphicon-plus"></i> 添加
+                                        <i class="glyphicon glyphicon-plus"></i> 添加标准属性
                                     </button>
                                 </div>
                                 <table class="table table-bordered">
@@ -279,6 +279,19 @@
                                     <th style="width: 200px">操作</th>
                                     </thead>
                                     <tbody id="header_list"></tbody>
+                                </table>
+                                <div id="custom_header_toolbar" class="btn-group" style="padding-bottom: 10px">
+                                    <button id="add_custom_header_item" class="btn btn-primary" title="添加">
+                                        <i class="glyphicon glyphicon-plus"></i> 添加其他属性
+                                    </button>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th style="width: 235px">header类型</th>
+                                        <th>header内容</th>
+                                        <th style="width: 200px">操作</th>
+                                    </thead>
+                                    <tbody id="custom_header_list"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -387,8 +400,8 @@
                                 <table class="table table-bordered" style="width:100%;table-layout:fixed;">
                                     <thead>
                                         <tr>
-                                            <th style='width: 80px'>接口名称</th>
-                                            <th style='width: 640px'>URL</th>
+                                            <th style='width: 200px;'>接口名称</th>
+                                            <th style='width: 500px'>URL</th>
                                             <th style='width: 80px'>状态码</th>
                                             <th style='width: 120px'>响应时间(毫秒)</th>
                                             <th style='width: 100px'>是否通过</th>

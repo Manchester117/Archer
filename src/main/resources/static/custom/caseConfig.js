@@ -236,8 +236,10 @@ function modCaseInfo(caseId) {
                     for (var p_api_idx = 0; p_api_idx < projectApiJson.length; ++p_api_idx) {
                         $("#multiselect").append("<option value='" + result.projectApiJson[p_api_idx].id + "'>" + result.projectApiJson[p_api_idx].apiName + "</option>");
                     }
-                    for (var c_api_idx = 0; c_api_idx < caseApiJson.length; ++c_api_idx) {
-                        $("#multiselect_to").append("<option value='" + result.caseApiJson[c_api_idx].id + "'>" + result.caseApiJson[c_api_idx].apiName + "</option>");
+                    if (caseApiJson !== null) {
+                        for (var c_api_idx = 0; c_api_idx < caseApiJson.length; ++c_api_idx) {
+                            $("#multiselect_to").append("<option value='" + result.caseApiJson[c_api_idx].id + "'>" + result.caseApiJson[c_api_idx].apiName + "</option>");
+                        }
                     }
                 }
             });
@@ -478,50 +480,95 @@ function apiInfoView(caseApiId) {
 
             // 动态获取Header表单
             var $header_list = $("#header_list");                                       // 拿到要动态生成的tbody
+            var $custom_header_list = $("#custom_header_list");
             var headerItems = JSON.parse(result['header']);                             // 拿到存储Header的JSON
             var header_item_index = 0;
+            var custom_header_item_index = 0;
+            var header_item_title_list = [
+                'Accept',
+                'Cache-Control',
+                'Content-Type',
+                'Cookie',
+                'Host',
+                'Referer',
+                'User-Agent',
+                'X-Requested-With'
+            ];
             for (var headerItem in headerItems) {
-                header_item_index++;                                                    // ID下标累加
-                var header_item_row = $("<tr></tr>");                                   // 添加一行
+                if ($.inArray(headerItem, header_item_title_list) !== -1) {
+                    header_item_index++;                                                    // ID下标累加
+                    var header_item_row = $("<tr></tr>");                                   // 添加一行
 
-                var header_type_col = $("<td></td>");                                   // 添加类型列
-                var $header_type_select = $("<select class='selectpicker header-type-select' id='header_type_select_" + header_item_index + "'></select>");
-                $header_type_select.append("<option value='Accept'>Accept</option>");
-                $header_type_select.append("<option value='Cache-Control'>Cache-Control</option>");
-                $header_type_select.append("<option value='Content-Type'>Content-Type</option>");
-                $header_type_select.append("<option value='Cookie'>Cookie</option>");
-                $header_type_select.append("<option value='Host'>Host</option>");
-                $header_type_select.append("<option value='Referer'>Referer</option>");
-                $header_type_select.append("<option value='User-Agent'>User-Agent</option>");
-                $header_type_select.append("<option value='X-Requested-With'>X-Requested-With</option>");
-                $header_type_select.val(headerItem);                                    // 下拉框设置为从DB中读取的值(注意:直接用val)
-                $header_type_select.appendTo(header_type_col);
+                    var header_type_col = $("<td></td>");                                   // 添加类型列
+                    var $header_type_select = $("<select class='selectpicker header-type-select' id='header_type_select_" + header_item_index + "'></select>");
+                    $header_type_select.append("<option value='Accept'>Accept</option>");
+                    $header_type_select.append("<option value='Cache-Control'>Cache-Control</option>");
+                    $header_type_select.append("<option value='Content-Type'>Content-Type</option>");
+                    $header_type_select.append("<option value='Cookie'>Cookie</option>");
+                    $header_type_select.append("<option value='Host'>Host</option>");
+                    $header_type_select.append("<option value='Referer'>Referer</option>");
+                    $header_type_select.append("<option value='User-Agent'>User-Agent</option>");
+                    $header_type_select.append("<option value='X-Requested-With'>X-Requested-With</option>");
+                    $header_type_select.val(headerItem);                                    // 下拉框设置为从DB中读取的值(注意:直接用val)
+                    $header_type_select.appendTo(header_type_col);
 
-                $header_type_select.selectpicker('refresh');                            // 一定要加上'refresh'和'render'.否则下拉选择将不显示
-                $header_type_select.selectpicker('render');
+                    $header_type_select.selectpicker('refresh');                            // 一定要加上'refresh'和'render'.否则下拉选择将不显示
+                    $header_type_select.selectpicker('render');
 
-                var header_content_col = $("<td></td>");                                // 添加内容列
-                var $header_content_input = $('<input class="form-control header-value-input" style="width: 100%;" id="header_content_input_' + header_item_index + '" placeholder="header内容"/>');
-                $header_content_input.val(headerItems[headerItem]);                     // 填入从DB获取的值
-                $header_content_input.appendTo(header_content_col);
+                    var header_content_col = $("<td></td>");                                // 添加内容列
+                    var $header_content_input = $('<input class="form-control header-value-input" style="width: 100%;" id="header_content_input_' + header_item_index + '" placeholder="header内容"/>');
+                    $header_content_input.val(headerItems[headerItem]);                     // 填入从DB获取的值
+                    $header_content_input.appendTo(header_content_col);
 
-                var header_operator_col = $("<td></td>");                               // 添加操作列
-                var $header_del_btn = $('<button/>', {
-                    "class": "btn btn-default del_header_btn",
-                    "id": "header_item_del_button_" + header_item_index,
-                    "title": "删除"
-                });
-                var $iconHeader = $('<i/>', {"class": "glyphicon glyphicon-minus"});
-                var $spanHeader = $("<span>&nbsp;删除</span>");
-                $iconHeader.appendTo($header_del_btn);
-                $spanHeader.appendTo($header_del_btn);
-                $header_del_btn.appendTo(header_operator_col);
+                    var header_operator_col = $("<td></td>");                               // 添加操作列
+                    var $header_del_btn = $('<button/>', {
+                        "class": "btn btn-default del_header_btn",
+                        "id": "header_item_del_button_" + header_item_index,
+                        "title": "删除"
+                    });
+                    var $iconHeader = $('<i/>', {"class": "glyphicon glyphicon-minus"});
+                    var $spanHeader = $("<span>&nbsp;删除</span>");
+                    $iconHeader.appendTo($header_del_btn);
+                    $spanHeader.appendTo($header_del_btn);
+                    $header_del_btn.appendTo(header_operator_col);
 
-                header_item_row.append(header_type_col);
-                header_item_row.append(header_content_col);
-                header_item_row.append(header_operator_col);
+                    header_item_row.append(header_type_col);
+                    header_item_row.append(header_content_col);
+                    header_item_row.append(header_operator_col);
 
-                $header_list.append(header_item_row);
+                    $header_list.append(header_item_row);
+                } else {
+                    custom_header_item_index++;
+                    var custom_header_item_row = $("<tr></tr>");                                   // 添加一行
+
+                    var custom_header_type_col = $("<td></td>");                                   // 添加类型列
+                    var $custom_header_type_input = $('<input class="form-control header-name-input" style="width: 100%;" id="header_item_content_' + header_item_index + '" placeholder="header类型"/>');
+                    $custom_header_type_input.val(headerItem);                                    // 下拉框设置为从DB中读取的值(注意:直接用val)
+                    $custom_header_type_input.appendTo(custom_header_type_col);
+
+                    var custom_header_content_col = $("<td></td>");                                // 添加内容列
+                    var $custom_header_content_input = $('<input class="form-control header-value-input" style="width: 100%;" id="header_content_input"' + header_item_index + ' placeholder="header内容"/>');
+                    $custom_header_content_input.val(headerItems[headerItem]);                     // 填入从DB获取的值
+                    $custom_header_content_input.appendTo(custom_header_content_col);
+
+                    var custom_header_operator_col = $("<td></td>");                               // 添加操作列
+                    var $custom_header_del_btn = $('<button/>', {
+                        "class": "btn btn-default del_header_btn",
+                        "id": "custom_header_item_del_button_" + custom_header_item_index,
+                        "title": "删除"
+                    });
+                    var $customIconHeader = $('<i/>', {"class": "glyphicon glyphicon-minus"});
+                    var $customSpanHeader = $("<span>&nbsp;删除</span>");
+                    $customIconHeader.appendTo($custom_header_del_btn);
+                    $customSpanHeader.appendTo($custom_header_del_btn);
+                    $custom_header_del_btn.appendTo(custom_header_operator_col);
+
+                    custom_header_item_row.append(custom_header_type_col);
+                    custom_header_item_row.append(custom_header_content_col);
+                    custom_header_item_row.append(custom_header_operator_col);
+
+                    $custom_header_list.append(custom_header_item_row);
+                }
             }
 
 
@@ -718,6 +765,7 @@ $('#modify_api_modal').on('hide.bs.modal', function() {
     $('#wait_millis').val("");
 
     $('#header_list').empty();
+    $('#custom_header_list').empty();
     $('#param_list').empty();
     $('#json_body').val("");
     $('#verify_list').empty();
@@ -811,6 +859,16 @@ function getCaseApiInfoJsonModifyData() {
         if (headerName === 'Content-Type')
             contentType = headerValue;
         headerItemJson[headerName] = headerValue;
+    }
+
+    var $custom_header_list = $("#custom_header_list");
+    var customHeaderItemLength = $custom_header_list.find("tr").length;
+    var customHeaderNameList = $custom_header_list.find(".header-name-input");
+    var customHeaderValueList = $custom_header_list.find(".header-value-input");
+    for (var customHeaderIndex = 0; customHeaderIndex < customHeaderItemLength; ++customHeaderIndex) {
+        var customHeaderName = customHeaderNameList[customHeaderIndex].value;
+        var customHeaderValue = customHeaderValueList[customHeaderIndex].value;
+        headerItemJson[customHeaderName] = customHeaderValue;
     }
 
     var bodyJson = {};
@@ -1037,7 +1095,7 @@ $run_case_btn.click(
                 console.log("当前浏览器支持WebSocket");
 
                 // socket = new WebSocket("ws://192.168.201.235:8080/webSocket");
-                socket = new WebSocket("ws://192.168.66.143:8080/webSocket");           // 如果在部署的时候这里需要配置
+                socket = new WebSocket("ws://192.168.66.143:8081/webSocket");           // 如果在部署的时候这里需要配置
 
                 socket.onopen = function() {                                            // 连接打开事件
                     console.log("Socket已打开");
@@ -1055,8 +1113,8 @@ $run_case_btn.click(
                         var $resultRow = null;
                         if (resultJson['isSuccess'] === 1) {
                             $resultRow = $("<tr>" +
-                                                "<td style='width: 80px'>" + resultJson['apiName'] + "</td>" +
-                                                "<td style='width: 640px;word-wrap: break-word;white-space:pre-wrap'>" + resultJson['url'] + "</td>" +
+                                                "<td style='width: 200px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden'>" + resultJson['apiName'] + "</td>" +
+                                                "<td style='width: 500px;word-wrap: break-word;white-space:pre-wrap'>" + resultJson['url'] + "</td>" +
                                                 "<td style='width: 80px'>" + resultJson['statusCode'] + "</td>" +
                                                 "<td style='width: 120px'>" + resultJson['respTime'] + "</td>" +
                                                 "<td style='width: 100px'>" +
@@ -1065,8 +1123,8 @@ $run_case_btn.click(
                                            "</tr>");
                         } else {
                             $resultRow = $("<tr>" +
-                                                "<td style='width: 80px'>" + resultJson['apiName'] + "</td>" +
-                                                "<td style='width: 640px;word-wrap: break-word;white-space:pre-wrap'>" + resultJson['url'] + "</td>" +
+                                                "<td style='width: 200px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden'>" + resultJson['apiName'] + "</td>" +
+                                                "<td style='width: 500px;word-wrap: break-word;white-space:pre-wrap'>" + resultJson['url'] + "</td>" +
                                                 "<td style='width: 80px'>" + resultJson['statusCode'] + "</td>" +
                                                 "<td style='width: 120px'>" + resultJson['respTime'] + "</td>" +
                                                 "<td style='width: 100px'>" +

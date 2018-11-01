@@ -5,10 +5,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.archer.source.domain.entity.ApiInfo;
 import com.archer.source.domain.entity.RespInfo;
+import com.archer.source.domain.entity.ServiceInfo;
 import com.archer.source.domain.entity.VerifyInfo;
 import com.archer.source.engine.ExecutionComponent;
 import com.archer.source.engine.except.ArcherException;
+import com.archer.source.engine.snatch.SnatchApi;
 import com.archer.source.service.*;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +27,8 @@ import java.util.Objects;
 @Controller
 public class ApiInfoController {
     @Autowired
+    private ServiceInfoService service;
+    @Autowired
     private ApiInfoService apiService;
     @Autowired
     private VerifyInfoService verifyService;
@@ -29,7 +36,11 @@ public class ApiInfoController {
     private RespInfoService respService;
     @Autowired
     private ExecutionComponent execute;
+    @Autowired
+    private SnatchApi snatchApi;
 
+    @ApiOperation(value = "进入接口列表页", notes = "根据serviceId获取接口列表")
+    @ApiImplicitParam(name = "serviceId", value = "服务ID", required = false, dataType = "Integer", paramType = "")
     @GetMapping(path = "/apiList")
     public String apiList(Model model, @RequestParam(value = "serviceId", required = false) Integer serviceId) {
         model.addAttribute("serviceId", serviceId);
@@ -121,6 +132,12 @@ public class ApiInfoController {
         JSONArray verifyInfoJson = JSONArray.parseArray(JSON.toJSONString(verifyInfoList));
         apiAndVerifyInfoJson.put("verifyList", verifyInfoJson);
 
+        // 如果projectId为空则根据ApiInfo获取projectId
+        Integer apiServiceId = apiInfo.getServiceId();
+        ServiceInfo serviceInfo = service.getServiceInfo(apiServiceId);
+        Integer projectId = serviceInfo.getProjectId();
+
+        model.addAttribute("projectId", projectId);
         model.addAttribute("apiAndVerifyInfo", apiAndVerifyInfoJson);
         return "apiModPage";
     }
@@ -152,7 +169,7 @@ public class ApiInfoController {
         // 更新多个验证点
         JSONArray verifyInfoArray = apiAndVerifyJson.getJSONArray("verifyInfoList");
         verifyService.deleteVerifyInfoByApiId(apiInfo.getId());                                             // 删除原有的验证点
-        if (!Objects.equals(verifyInfoArray.size(), 0)) {                                                // 如果有验证点
+        if (!Objects.equals(verifyInfoArray.size(), 0)) {                                                   // 如果有验证点
             List<VerifyInfo> verifyInfoList = verifyInfoArray.toJavaList(VerifyInfo.class);
             for (VerifyInfo verifyInfo : verifyInfoList) {
                 verifyInfo.setApiId(apiInfo.getId());                                                       // 设置验证点ID
@@ -227,5 +244,13 @@ public class ApiInfoController {
         resultInfoJson.put("verifyInfoList", verifyInfoListJson);
 
         return resultInfoJson;
+    }
+
+    @PostMapping(path = "/importApi")
+    public @ResponseBody JSONObject importApi(@RequestParam("serviceId") Integer serviceId,
+                                              @RequestParam("swaggerApiUrl") String swaggerApiUrl) throws ArcherException {
+        JSONObject importApiInfoJson = snatchApi.getSwaggerApiList(swaggerApiUrl);
+        List<ApiInfo> importApiInfoList = snatchApi.setSwaggerApiInfo(importApiInfoJson);
+        return snatchApi.importApi(serviceId, importApiInfoList);
     }
 }

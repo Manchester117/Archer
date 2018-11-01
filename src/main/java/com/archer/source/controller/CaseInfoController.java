@@ -180,6 +180,26 @@ public class CaseInfoController {
             oldCaseInfo.setCaseName(newCaseInfo.getString("caseName"));
             oldCaseInfo.setApiSequence(newApiSequence);
             updateFlag = caseService.updateCaseInfo(oldCaseInfo);
+        } else if (Objects.nonNull(newApiIdList) && Objects.isNull(oldApiIdList)) {
+            for (Integer newApiId: newApiIdList) {
+                ApiInfo apiInfo = apiService.getApiInfo(newApiId);
+                CaseApiInfo newCaseApiInfo = new CaseApiInfo();
+                newCaseApiInfo.setApiId(apiInfo.getId());
+                newCaseApiInfo.setApiName(apiInfo.getApiName());
+                newCaseApiInfo.setProtocol(apiInfo.getProtocol());
+                newCaseApiInfo.setUrl(apiInfo.getUrl());
+                newCaseApiInfo.setMethod(apiInfo.getMethod());
+                newCaseApiInfo.setHeader(apiInfo.getHeader());
+                newCaseApiInfo.setBody(apiInfo.getBody());
+                newCaseApiInfo.setCreateTime(apiInfo.getCreateTime());
+                newCaseApiInfo.setIsMock(apiInfo.getIsMock());
+                newCaseApiInfo.setServiceId(apiInfo.getServiceId());
+                newCaseApiInfo.setCaseId(caseId);
+                caseApiService.insertCaseApiInfo(newCaseApiInfo);
+            }
+            oldCaseInfo.setCaseName(newCaseInfo.getString("caseName"));
+            oldCaseInfo.setApiSequence(newApiSequence);
+            updateFlag = caseService.updateCaseInfo(oldCaseInfo);
         }
         updateMsg.put("flag", updateFlag);
         return updateMsg;
@@ -278,10 +298,12 @@ public class CaseInfoController {
 
         // 对用例接口进行重排序
         JSONArray caseApiArray = new JSONArray();
-        for (Integer apiId: apiSequenceList) {
-            for (CaseApiInfo caseApiInfo: caseApiInfoList) {
-                if (Objects.equals(caseApiInfo.getApiId(), apiId))
-                    caseApiArray.add(caseApiInfo);
+        if (Objects.nonNull(apiSequenceList)) {
+            for (Integer apiId : apiSequenceList) {
+                for (CaseApiInfo caseApiInfo : caseApiInfoList) {
+                    if (Objects.equals(caseApiInfo.getApiId(), apiId))
+                        caseApiArray.add(caseApiInfo);
+                }
             }
         }
         caseApiJsonObject.put("rows", caseApiArray);

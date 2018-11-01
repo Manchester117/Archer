@@ -32,6 +32,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -205,8 +206,13 @@ public class RequestComponent {
     }
 
     private String constructRequestUriString(String baseUrl, String protocolType) {
-        // 设置Get参数
         String requestUrl = null;
+        // 避免baseUrl中带有http或https前缀
+        if (baseUrl.startsWith("http://"))
+            baseUrl = baseUrl.substring(7, baseUrl.length());
+        if (baseUrl.startsWith("https://"))
+            baseUrl = baseUrl.substring(8, baseUrl.length());
+        // 设置Get参数
         if (Objects.equals("HTTP", protocolType))
             requestUrl = StringUtils.join("http://", baseUrl, apiItem.getUrl());
         else
@@ -248,8 +254,11 @@ public class RequestComponent {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            // 设置请求URL
-            requestUrl = StringUtils.join(requestUrl, "?", bodySequence);
+            // 如果GET参数不为空,进行参数和URL的拼接
+            if (Strings.isNotBlank(bodySequence)) {
+                // 设置请求URL
+                requestUrl = StringUtils.join(requestUrl, "?", bodySequence);
+            }
         }
         // 判断URL是否合法
         URI uri = checkUriString(requestUrl);

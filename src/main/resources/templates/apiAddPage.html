@@ -58,7 +58,7 @@
                 <div class="panel-body">
                     <div id="header_toolbar" class="btn-group" style="padding-bottom: 10px">
                         <button id="add_header_item" class="btn btn-primary" title="添加">
-                            <i class="glyphicon glyphicon-plus"></i> 添加
+                            <i class="glyphicon glyphicon-plus"></i> 添加标准属性
                         </button>
                     </div>
                     <table class="table table-bordered">
@@ -68,6 +68,19 @@
                             <th style="width: 200px">操作</th>
                         </thead>
                         <tbody id="header_list"></tbody>
+                    </table>
+                    <div id="custom_header_toolbar" class="btn-group" style="padding-bottom: 10px">
+                        <button id="add_custom_header_item" class="btn btn-primary" title="添加">
+                            <i class="glyphicon glyphicon-plus"></i> 添加其他属性
+                        </button>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <th style="width: 235px">header类型</th>
+                            <th>header内容</th>
+                            <th style="width: 200px">操作</th>
+                        </thead>
+                        <tbody id="custom_header_list"></tbody>
                     </table>
                 </div>
             </div>
@@ -147,25 +160,6 @@
             </div>
         </div>
     </div>
-    <!--<script type="text/javascript" th:src="@{custom/apiAddPage.js}"></script>-->
-    <!--<script th:inline="javascript">-->
-        <!--/*<![CDATA[*/-->
-        <!--var serviceId = $("#service_id").val();-->
-        <!--var $service_select_add_api = $("#service_select_add_api");-->
-        <!--$.ajax({-->
-            <!--type: "post",-->
-            <!--url: "/getServiceInfo",-->
-            <!--data: "serviceId=" + serviceId,-->
-            <!--dataType: "json",-->
-            <!--contentType: "application/x-www-form-urlencoded; charset=utf-8",-->
-            <!--success: function (result) {-->
-                <!--$service_select_add_api.append("<option value=" + result.id + ">" + result.serviceName + "</option>");-->
-                <!--$service_select_add_api.selectpicker("refresh");-->
-                <!--$service_select_add_api.selectpicker("render");-->
-            <!--}-->
-        <!--});-->
-        <!--/*]]>*/-->
-    <!--</script>-->
 </div>
 </body>
 </html>

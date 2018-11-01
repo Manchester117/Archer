@@ -32,11 +32,15 @@ $add_header_item.click(
         var header_item_title_col = $("<td></td>");
         // 添加bootstrap-select
         var $header_item_select = $("<select class='selectpicker header-name-select' id='header_item_select_" + header_item_index + "'></select>");
-        $header_item_select.append("<option value='Accept'>Accept</option>");
-        $header_item_select.append("<option value='Cookie'>Cookie</option>");
-        $header_item_select.append("<option value='Content-Type'>Content-Type</option>");
-        $header_item_select.append("<option value='User-Agent'>User-Agent</option>");
-        $header_item_select.append("<option value='X-Requested-With'>X-Requested-With</option>");
+        $header_type_select.append("<option value='Accept'>Accept</option>");
+        $header_type_select.append("<option value='Cache-Control'>Cache-Control</option>");
+        $header_type_select.append("<option value='Content-Type'>Content-Type</option>");
+        $header_type_select.append("<option value='Cookie'>Cookie</option>");
+        $header_type_select.append("<option value='Host'>Host</option>");
+        $header_type_select.append("<option value='Referer'>Referer</option>")
+        $header_type_select.append("<option value='User-Agent'>User-Agent</option>");
+        $header_type_select.append("<option value='X-Requested-With'>X-Requested-With</option>");
+
         $header_item_select.appendTo(header_item_title_col).selectpicker('refresh');
 
         // 添加一列 - 内容
@@ -66,6 +70,54 @@ $add_header_item.click(
         header_item_row.append(header_item_operator_col);
 
         $header_list.append(header_item_row);
+    }
+);
+
+/**
+ * @description 动态添加自定义请求头
+ * @type {*|jQuery|HTMLElement}
+ */
+var custom_header_item_index = 0;
+var $add_custom_header_item = $("#add_custom_header_item");
+$add_custom_header_item.click(
+    function () {
+        custom_header_item_index++;
+        var $custom_header_list = $("#custom_header_list");
+        // 添加一行header类型
+        var header_item_row = $("<tr></tr>");
+        // 添加一列 - 类型
+        var header_item_title_col = $("<td></td>");
+        // 添加bootstrap-select
+        var $header_item_title = $('<input class="form-control header-name-input" style="width: 100%;" id="header_item_content_' + header_item_index + '" placeholder="header类型"/>');
+        $header_item_title.appendTo(header_item_title_col);
+
+        // 添加一列 - 内容
+        var header_item_content_col = $("<td></td>");
+
+        // 添加输入框
+        var $header_item_content = $('<input class="form-control header-value-input" style="width: 100%;" id="header_item_content_' + header_item_index + '" placeholder="header内容"/>');
+        $header_item_content.appendTo(header_item_content_col);
+
+        // 添加一列 - 操作
+        var header_item_operator_col = $("<td></td>");
+
+        // 添加删除Button
+        var $header_del_item_btn = $('<button/>', {
+            "class": "btn btn-default del_header_btn",
+            "id": "custom_header_item_del_button_" + custom_header_item_index,
+            "title": "删除"
+        });
+        var $icon = $('<i/>', {"class": "glyphicon glyphicon-minus"});
+        var $span = $("<span>&nbsp;删除</span>");
+        $icon.appendTo($header_del_item_btn);
+        $span.appendTo($header_del_item_btn);
+        $header_del_item_btn.appendTo(header_item_operator_col);
+
+        header_item_row.append(header_item_title_col);
+        header_item_row.append(header_item_content_col);
+        header_item_row.append(header_item_operator_col);
+
+        $custom_header_list.append(header_item_row);
     }
 );
 
@@ -253,6 +305,16 @@ function getApiInfoJsonData() {
         if (headerName === 'Content-Type')
             contentType = headerValue;
         headerItemJson[headerName] = headerValue;
+    }
+
+    var $custom_header_list = $("#custom_header_list");
+    var customHeaderItemLength = $custom_header_list.find("tr").length;
+    var customHeaderNameList = $custom_header_list.find(".header-name-input");
+    var customHeaderValueList = $custom_header_list.find(".header-value-input");
+    for (var customHeaderIndex = 0; customHeaderIndex < customHeaderItemLength; ++customHeaderIndex) {
+        var customHeaderName = customHeaderNameList[customHeaderIndex].value;
+        var customHeaderValue = customHeaderValueList[customHeaderIndex].value;
+        headerItemJson[customHeaderName] = customHeaderValue;
     }
 
     var bodyJson = {};

@@ -5,7 +5,7 @@
 var $api_list = $("#api_list");
 var $search_btn = $("#search_btn");
 $search_btn.click(
-    function() {
+    function () {
         $api_list.bootstrapTable("selectPage", 1);
     }
 );
@@ -16,7 +16,7 @@ $search_btn.click(
  */
 var $reset_btn = $("#reset_btn");
 $reset_btn.click(
-    function() {
+    function () {
         $('.form-group :text').val("");
         $('#project_select').selectpicker('val', '');
         // service_select不需要设置,因为project_select的值发生改变导致changed.bs.select事件发生.
@@ -28,10 +28,11 @@ $reset_btn.click(
  * @description 如果是从项目->服务->接口,则不显示项目和服务的下拉搜索
  * @type {*|jQuery|HTMLElement}
  */
+var service_id = $("#service_id").val();
 var $project_search = $("#project_search");
 var $service_search = $("#service_search");
 var $create_api_btn = $("#create_api_btn");
-var service_id = $("#service_id").val();
+var $import_api_btn = $("#import_api_btn");
 if (service_id !== '') {                            // 如果从项目->服务->接口进入,则不显示项目和服务的下拉搜索
     $project_search.hide();
     $service_search.hide();
@@ -39,6 +40,7 @@ if (service_id !== '') {                            // 如果从项目->服务->
     $project_search.show();
     $service_search.show();
     $create_api_btn.css("visibility", "hidden");
+    $import_api_btn.css("visibility", "hidden");
 }
 
 /**
@@ -127,7 +129,7 @@ function delApiInfo(apiId) {
         data: "apiId=" + apiId,
         dataType: "json",
         contentType: "application/x-www-form-urlencoded; charset=utf-8",
-        success: function(result) {
+        success: function (result) {
             if (result['deleteApiFlag'] === 1) {                                 // 如果从库中删除接口成功
                 bootbox.alert({
                     title: '提示',
@@ -151,3 +153,31 @@ function forwardAddApiPage() {
     var serviceId = $("#service_id").val();
     window.location.href = "/apiAddPage?serviceId=" + serviceId;
 }
+
+/**
+ * @description 从Swagger导入接口
+ */
+$import_api_btn.click(
+    function () {
+        bootbox.setLocale("zh_CN");
+        bootbox.prompt("请输入接口列表地址(例如:http://ip:port/swagger/docs/v1)", function (swaggerApiUrl) {
+            $.ajax({
+                type: "post",
+                url: "/importApi",
+                data: "serviceId=" + serviceId + "&swaggerApiUrl=" + swaggerApiUrl,
+                dataType: "json",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                success: function(result) {
+                    var insertCount = result['insertCount'];
+                    var updateCount = result['updateCount'];
+                    bootbox.alert({
+                        message: "导入完成--共导入" + insertCount + "个接口,更新" + updateCount + "个接口",
+                        callback: function() {
+                            window.location.href = "/apiList?serviceId=" + serviceId;
+                        }
+                    });
+                }
+            });
+        });
+    }
+);
