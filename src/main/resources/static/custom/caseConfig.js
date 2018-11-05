@@ -1084,6 +1084,7 @@ $run_case_btn.click(
             });
 
             $("#select_hosts_modal").modal('show');                                     // 显示选择Hosts模态框
+            $("#select_hosts_modal").modal('show');                                     // 显示选择Hosts模态框
 
             if (typeof (WebSocket) === "undefined") {                                   // 以下是WebSocket与后端建立连接
                 console.log("当前浏览器不支持WebSocket");
