@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-@Profile({"local"})         // 只在本地开启Swagger
+@Profile({"local"})         // 只在本地开启Swagger,访问地址-- http://192.168.66.143:8081/swagger-ui.html
 public class Swagger2 {
     @Bean
     public Docket createRestApi() {
@@ -29,7 +29,7 @@ public class Swagger2 {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Archer测试使用Swagger2构建API管理")
-                .contact(new Contact("Archer", "http://192.168.201.235:8080", ""))
+                .contact(new Contact("Archer", "http://192.168.66.143:8081", ""))
                 .version("1.0")
                 .description("API描述")
                 .build();
